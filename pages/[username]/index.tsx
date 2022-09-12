@@ -1,15 +1,44 @@
 import React from 'react'
-import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
-import Loader from '../../components/Loader'
-import toast from 'react-hot-toast'
+import UserProfile from '../../components/UserProfile'
+import PostFeed from '../../components/PostFeed'
+import { getUserWithUserName, postToJSON } from '../../lib/firebase'
 
-export default function Username() {
+export async function getServerSideProps({ query }) {
+
+  const { username } = query;
+
+  const userDoc = await getUserWithUserName(username);
+
+  let user = null;
+  let posts = null;
+
+  if(userDoc) {
+    user = userDoc.data();
+    const postsQuery = userDoc.ref
+    .collection('posts')
+    .where('published', '==', true)
+    .orderBy('createdAt', 'desc')
+    .limit(5);
+
+    posts = (await postsQuery.get()).docs.map(postToJSON);
+  }
+
+  return {
+    props : { user, posts},
+  }
+}
+
+export default function UserProfilePage({ user, posts}) {
+
+  //Find Admin and change it
+
   return (
-    <div>
-        <button onClick={(() => toast.success('Hello Toast'))}>
-            Toast
-        </button>
-    </div>
+    <main>
+      <UserProfile user={user}/>
+      <PostFeed posts={posts} admin={false}/>
+    </main>
   )
 }
+
+
