@@ -2,12 +2,15 @@ import React from 'react'
 
 
 export default function Loader(show) {
-  return (
-    show ? 
-    <div className="loader">
-        
-    </div>
-    : 
-    null
-  )
+
+  if(show){
+    return (
+      <div className="loading"></div>
+    )
+  } else {
+    return (
+      <div className="not-loading"></div>
+    )
+  }
+
 }

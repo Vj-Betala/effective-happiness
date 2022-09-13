@@ -21,6 +21,7 @@ const firebaseConfig = {
 
   export const firestore = firebase.firestore();
   export const storage = firebase.storage();
+  export const serverTimeStamp = firebase.firestore.FieldValue.serverTimestamp;
 
   export const fromMillis = firebase.firestore.Timestamp.fromMillis;
 

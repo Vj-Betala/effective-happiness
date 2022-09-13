@@ -13,7 +13,7 @@ export async function getServerSideProps(context) {
   const postsQuery = firestore
   .collectionGroup('posts')
   .where('published', '==', true)
-  .orderBy('createdBy', 'desc')
+  .orderBy('createdAt', 'desc')
   .limit(LIMIT);
 
   const posts = (await postsQuery.get()).docs.map(postToJSON);
@@ -58,7 +58,7 @@ export default function Home(props) {
   return (
     <main>
       <PostFeed posts={posts} admin={false}/>
-      {!loading && !postsEnd && <button onClick={getMorePosts}>Load More</button>}
+      {(!loading && !postsEnd) && <button onClick={getMorePosts}>Load More</button>}
 
       <Loader show={loading}/>
 

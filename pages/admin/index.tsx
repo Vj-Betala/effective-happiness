@@ -1,7 +1,12 @@
 import React from 'react'
+import AuthCheck from '../../components/AuthCheck'
 
-export default function Index() {
+export default function AdminPostsPage(props) {
   return (
-    <div>Index</div>
+    <main>
+      <AuthCheck>
+        test
+      </AuthCheck>
+    </main>
   )
 }
