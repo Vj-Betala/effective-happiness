@@ -7,7 +7,7 @@ function PostFeed({posts, admin}) {
   )
 }
 
-function PostItem({post, admin=false}){
+function PostItem({post, admin}){
 
     const wordCount = post?.content.trim().split(/\s+/g).length;
     const minutesToRead = (wordCount / 100 + 1).toFixed(0);
