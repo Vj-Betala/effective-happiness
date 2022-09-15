@@ -8,6 +8,7 @@ import kebabCase from 'lodash.kebabcase'
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import styles from '../../styles/Home.module.css'
+import { collection, doc } from 'firebase/firestore';
 
 export default function AdminPostsPage(props) {
   return (
@@ -51,7 +52,8 @@ function CreateNewPosts() {
   const CreatePost = async (e) => {
     e.preventDefault();
     const uid = auth.currentUser.uid;
-    const ref = firestore.collection('users').doc(uid).collection('posts').doc(slug);
+    // const ref = firestore.collection('users').doc(uid).collection('posts').doc(slug);
+    const ref = doc(firestore, 'users', uid);
 
     const data = {
       title,
@@ -60,8 +62,8 @@ function CreateNewPosts() {
       username,
       published:false,
       content : "# Hello World",
-      createdAt : serverTimeStamp(),
-      updatedAt : serverTimeStamp(),
+      createdAt : serverTimeStamp,
+      updatedAt : serverTimeStamp,
       heartCount : 0
     }
 
