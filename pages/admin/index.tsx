@@ -8,7 +8,7 @@ import kebabCase from 'lodash.kebabcase'
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import styles from '../../styles/Home.module.css'
-import { collection, doc } from 'firebase/firestore';
+import { collection, doc, orderBy, query, setDoc } from 'firebase/firestore';
 
 export default function AdminPostsPage(props) {
   return (
@@ -22,9 +22,13 @@ export default function AdminPostsPage(props) {
 }
 
 function PostList() {
-  const ref = firestore.collection('users').doc(auth.currentUser.uid).collection('posts');
-  const query = ref.orderBy('createdAt');
-  const [querySnapshot] = useCollection(query);
+  // const ref = firestore.collection('users').doc(auth.currentUser.uid).collection('posts');
+  // const query = ref.orderBy('createdAt');
+
+  const ref =  collection(firestore, 'users', auth.currentUser.uid, 'posts');
+  const q = query(ref, orderBy('createdAt'))
+
+  const [querySnapshot] = useCollection(q);
 
   const posts = querySnapshot?.docs.map((doc) => {
     doc.data();
@@ -67,7 +71,9 @@ function CreateNewPosts() {
       heartCount : 0
     }
 
-    await ref.set(data)
+    // await ref.set(data)
+
+    await setDoc(ref, data);
 
     toast.success('Post Created');
 

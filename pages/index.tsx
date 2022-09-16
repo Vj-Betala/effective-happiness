@@ -5,18 +5,21 @@ import Loader from '../components/Loader'
 import toast from 'react-hot-toast'
 import { firestore, fromMillis, postToJSON } from '../lib/firebase'
 import PostFeed from '../components/PostFeed'
+import { collectionGroup, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
 
 
 const LIMIT = 1;
 
 export async function getServerSideProps(context) {
-  const postsQuery = firestore
-  .collectionGroup('posts')
-  .where('published', '==', true)
-  .orderBy('createdAt', 'desc')
-  .limit(LIMIT);
+  // const postsQuery = firestore
+  // .collectionGroup('posts')
+  // .where('published', '==', true)
+  // .orderBy('createdAt', 'desc')
+  // .limit(LIMIT);
 
-  const posts = (await postsQuery.get()).docs.map(postToJSON);
+  const postsQuery = query(collectionGroup(firestore, 'posts'), where('published','==', true), orderBy('createdAt', 'desc'), limit(LIMIT))
+
+  const posts = (await getDocs(postsQuery)).docs.map(postToJSON);
 
   return {
     props: { posts },

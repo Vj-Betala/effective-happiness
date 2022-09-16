@@ -3,6 +3,7 @@ import styles from '../../styles/Home.module.css'
 import UserProfile from '../../components/UserProfile'
 import PostFeed from '../../components/PostFeed'
 import { getUserWithUserName, postToJSON } from '../../lib/firebase'
+import { limit, orderBy, query, where } from 'firebase/firestore'
 
 export async function getServerSideProps({ query }) {
 
@@ -21,11 +22,13 @@ export async function getServerSideProps({ query }) {
 
   if(userDoc) {
     user = userDoc.data();
-    const postsQuery = userDoc.ref
-    .collection('posts')
-    .where('published', '==', true)
-    .orderBy('createdAt', 'desc')
-    .limit(5);
+    // const postsQuery = userDoc.ref
+    // .collection('posts')
+    // .where('published', '==', true)
+    // .orderBy('createdAt', 'desc')
+    // .limit(5);
+
+    const postsQuery = query(userDoc.get('posts'), where('published','==',true), orderBy('createdAt', 'desc'), limit(5));
 
     posts = (await postsQuery.get()).docs.map(postToJSON);
   }
